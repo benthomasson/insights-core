@@ -130,14 +130,16 @@ class ExecutionContext(object):
         self.timeout = timeout
         self.all_files = all_files or []
 
-    def check_output(self, cmd, timeout=None, keep_rc=False, env=os.environ):
+    def check_output(self, cmd, timeout=None, keep_rc=False, env=None):
         """ Subclasses can override to provide special
             environment setup, command prefixes, etc.
         """
+        env = env or os.environ
         return subproc.call(cmd, timeout=timeout or self.timeout, stderr=STDOUT,
                 keep_rc=keep_rc, env=env)
 
-    def shell_out(self, cmd, split=True, timeout=None, keep_rc=False, env=os.environ):
+    def shell_out(self, cmd, split=True, timeout=None, keep_rc=False, env=None):
+        env = env or os.environ
         rc = None
         raw = self.check_output(cmd, timeout=timeout, keep_rc=keep_rc, env=env)
         if keep_rc:
